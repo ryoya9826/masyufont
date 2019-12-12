@@ -1,0 +1,46 @@
+\documentclass[autodetect-engine,dvi=dvipdfmx,ja=standard,japaram={units=true}]{bxjsarticle}
+\usepackage{askw}
+\usepackage{masyufont}
+\usepackage{spverbatim}
+\usepackage{metalogo}
+\usepackage{doc}
+\makeatletter
+
+\DeclareRobustCommand\cs[1]{\texttt{\char`\\#1}}
+\providecommand\marg[1]{%
+	{\ttfamily\char`\{}\meta{#1}{\ttfamily\char`\}}}
+\providecommand\oarg[1]{%
+	{\ttfamily[}\meta{#1}{\ttfamily]}}
+\providecommand\parg[1]{%
+	{\ttfamily(}\meta{#1}{\ttfamily)}}
+\masyufont{BIZUD}
+\usepackage{newtxtext}
+\title{The \textbf{masyufont} package}
+\author{Ryoya Ando}
+\date{\filedate}
+\begin{document}
+\maketitle
+\section{ライセンス} 
+ 
+  修正BSDライセンス（The BSD 2-Clause License）の下で配布される。
+\section{ユーザーマニュアル}
+\setcounter{subsection}{0}
+\subsection{更新履歴}
+\subsubsection{v1.0}
+
+\begin{itemize}
+	\item First release!!!
+\end{itemize}
+
+\subsection{はじめに}
+ このパッケージはp-\TeX,\LuaTeX-jaのもとでフォント設定を簡明化するものです。本パッケージはbxjsarticleを用いて「p-\TeX と\LuaTeX 、どちらのエンジンでもコンパイルが通る」ソースファイルの作成を支援する目的で開発されています。特に\spverb|ja=standard, japaram={units}|をオプション引数に設定して使用していると想定して設計しています。またp-\TeX を用いる場合はdviウェアはdvipdfmxを想定しています。内部で xkeyval, iftex, etoolbox パッケージを読み込みます。 
+ 
+\subsection{機能}
+
+\cmd{masyufont}\oarg{mathfont}\marg{mainfont}によって、プリセットを呼び出し本文フォント(mainfont)と数式フォント(mathfont)を変更することができます。
+
+\subsubsection{プリセット}
+
+すでに作成してあるプリセットを説明します。本文フォントではIPA,UDBIZ,Kyokasyoが使用可能です（UDBIZはフォント側の問題でp\TeX において組版が壊れるため、\LuaTeX での使用を推奨します）。それぞれ
+\end{document}
+
