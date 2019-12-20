@@ -9,13 +9,46 @@
 \RequirePackage{iftex}[2019/11/07]
 \RequirePackage{etoolbox}
 
-\ifptex
-\RequirePackage[noalphabet]{pxchfon}
-\fi
+\ifluatex
+	\else\ifptex
+		\else
+			\PackageError{masyufont.sty}{masyufont Package is only available in p-TeX,LuaTeX.}
+\fi\fi
+
+\def\addoption#1{
+	\@xp\newif\csname if@#1\endcsname
+	\csname @#1false\endcsname
+	\DeclareOption{#1}{\csname @#1true\endcsname}
+}
+
+\long\def\optiondef#1#2#3{
+	\csname if@#1\endcsname
+		#2
+	\else
+		#3
+	\fi
+}
+
+\addoption{alphabet}
+
+\ProcessOptions
+
+\optiondef{alphabet}{
+	\ifptex 
+		\RequirePackage[alphabet]{pxchfon}
+		\PackageInfo{masyufont.sty}{Package ``pxchfon" is loaded with alphabet option.}
+	\else
+		\PackageWarning{masyufont.sty}{Alphabet option is only available in p-TeX.}
+	\fi
+}{
+	\ifptex
+		\RequirePackage[noalphabet]{pxchfon}
+	\fi
+}
 
 \ifluatex
-\RequirePackage{unicode-math}
-\unimathsetup{math-style=ISO,bold-style=ISO}
+	\RequirePackage{unicode-math}
+	\unimathsetup{math-style=ISO,bold-style=ISO}
 \fi
 
 \def\masyu@fontselected#1{\PackageInfo{masyufont.sty}{Font ``\protect#1\space " is loaded.}}
@@ -32,8 +65,6 @@
 	\m@syu@font
 }
 
-\@onlypreamble\masyufont
-
 \newcommand{\masyuMainFontDefine}[3]{
 	\define@key[m@syu]{mainfont}{#1}[]{
 		\ifluatex
@@ -43,6 +74,7 @@
 		\fi\fi
 	}
 }
+
 \newcommand{\masyuMathFontDefine}[3]{
 	\define@key[m@syu]{mainfont}{#1}[]{
 		\ifluatex
@@ -55,6 +87,7 @@
 
 \@onlypreamble\masyuMainFontDefine
 \@onlypreamble\masyuMathFontDefine
+\@onlypreamble\masyufont
 
 \def\m@syu@font{\@ifnextchar[{\m@syu@mathfontset}{\m@syu@mainfontset@}}
 \def\m@syu@mainfontset@{\setkeys[m@syu]{mathfont}{default}\m@syu@mainfontset}
@@ -77,6 +110,8 @@
 	\PackageInfo{masyufont.sty}{Package ``newtxmath " is loaded as default settings.}
 }
 
+%---------------------------------------------------------------
+
 \define@key[m@syu]{mainfont}{IPA}[]{
 	\ifluatex
 		\setmainfont[Ligatures=TeX,BoldFont={ipam.ttf}]{ipam.ttf}
@@ -84,8 +119,6 @@
 		\setmainjfont[Ligatures=TeX,BoldFont={ipam.ttf}]{ipam.ttf}
 		\setsansjfont[Ligatures=TeX,BoldFont={ipag.ttf}]{ipag.ttf}
 	\else\ifptex
-		\usepackage[noalphabet]{pxchfon}
-		\masyu@packageloaded{pxchfon}
 		\setminchofont{ipam.ttf}  
 		\setgothicfont{ipag.ttf}  
 	\fi\fi
@@ -99,8 +132,6 @@
 		\setmainjfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-R.ttc}
 		\setsansjfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-B.ttc}
 	\else\ifptex
-		\usepackage[noalphabet]{pxchfon}
-		\masyu@packageloaded{pxchfon}
 		\setminchofont[1]{UDDigiKyokashoN-R.ttc}
 		\setgothicfont[1]{UDDigiKyokashoN-B.ttc}
 	\fi\fi
@@ -120,8 +151,6 @@
 		\setmainjfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDMinchoM.ttc}
 		\setsansjfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDGothicR.ttc}
 	\else\ifptex
-		\usepackage[noalphabet]{pxchfon}
-		\masyu@packageloaded{pxchfon}
 		\setminchofont[1]{BIZ-UDMinchoM.ttc}
 		\setgothicfont[1]{BIZ-UDGothicR.ttc}
 	\fi\fi
@@ -135,16 +164,17 @@
 
 \define@key[m@syu]{mathfont}{xits}[]{
 	\ifluatex
-		\usepackage{unicode-math}
-		\unimathsetup{math-style=ISO,bold-style=ISO}
 		\setmathfont{XITS-Math}
 		\setmathfont{XITS-Math}[range={cal,bfcal},StylisticSet=1]
 		\masyu@packageloaded{unicode-math}
 	\else
-		\PackageWarning{masyufont.sty}{Fonts  ``xits" is only available in Luatex. So I use default font definition.}
+		\PackageWarning{masyufont.sty}{Fonts  ``xits" is only available in LuaTeX. So I use default font definition.}
 		\usepackage{newtxmath}
 	\fi
 }
+
+
+
 
 %%
 %% End of file `masyufont.sty'.
