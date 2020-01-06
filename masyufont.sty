@@ -46,10 +46,6 @@
 	\fi
 }
 
-\ifluatex
-	\RequirePackage{unicode-math}
-	\unimathsetup{math-style=ISO,bold-style=ISO}
-\fi
 
 \def\masyu@fontselected#1{\PackageInfo{masyufont.sty}{Font ``\protect#1\space " is loaded.}}
 \def\masyu@packageloaded#1{\PackageInfo{masyufont.sty}{Package ``\protect#1\space " is loaded.}}
@@ -129,7 +125,7 @@
 	\ifluatex
 		\setmainfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-R.ttc}
 		\setsansfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-B.ttc}
-		\setmainjfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-R.ttc}
+		\setmainjfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-R001.ttf}
 		\setsansjfont[Ligatures=TeX,BoldFont={UDDigiKyokashoN-B.ttc}]{UDDigiKyokashoN-B.ttc}
 	\else\ifptex
 		\setminchofont[1]{UDDigiKyokashoN-R.ttc}
@@ -151,10 +147,20 @@
 		\setmainjfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDMinchoM.ttc}
 		\setsansjfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDGothicR.ttc}
 	\else\ifptex
-		\setminchofont[1]{BIZ-UDMinchoM.ttc}
-		\setgothicfont[1]{BIZ-UDGothicR.ttc}
+		\setminchofont{BIZ-UDMincho-Medium-01.ttf}
+		\setgothicfont{BIZ-UDGothicR001.ttf}
 	\fi\fi
 	\masyu@fontselected{BIZ-UDMinchoM.ttc}\masyu@fontselected{BIZ-UDMinchoM.ttc}
+}
+
+\masyuMainFontDefine{BIZUDo}{
+	\setmainfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDMinchoM.ttc}
+	\setsansfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDGothicR.ttc}
+	\setmainjfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDMinchoM.ttc}
+	\setsansjfont[Ligatures=TeX,BoldFont={BIZ-UDGothicB.ttc}]{BIZ-UDGothicR.ttc}
+}{
+	\setminchofont[1]{BIZ-UDMinchoM.ttc}
+	\setgothicfont{BIZ-UDGothicR001.ttf}
 }
 
 \define@key[m@syu]{mathfont}{timesnew}[]{
@@ -164,6 +170,8 @@
 
 \define@key[m@syu]{mathfont}{xits}[]{
 	\ifluatex
+		\RequirePackage{unicode-math}
+		\unimathsetup{math-style=ISO,bold-style=ISO}
 		\setmathfont{XITS-Math}
 		\setmathfont{XITS-Math}[range={cal,bfcal},StylisticSet=1]
 		\masyu@packageloaded{unicode-math}
@@ -173,8 +181,23 @@
 	\fi
 }
 
+\masyuMainFontDefine{oradano}{
+	\setmainjfont{OradanoGSRR.ttf}
+	\setmainfont{OradanoGSRR.ttf}
+	\setsansjfont{OradanoGSRR.ttf}
+	\setsansfont{OradanoGSRR.ttf}
+}{
+	\setminchofont{OradanoGSRR.ttf}
+	\setgothicfont{OradanoGSRR.ttf}
+}
 
-
+\masyuMainFontDefine{yumin}{
+	\setmainfont[Ligatures=TeX,BoldFont={yumindb.ttf}]{yumin.ttf}
+	\setmainjfont[Ligatures=TeX,BoldFont={yumindb.ttf}]{yumin.ttf}
+}{	
+	\setminchofont{yumin.ttf}
+	\setgothicfont[0]{YuGothM.ttc}
+}
 
 %%
 %% End of file `masyufont.sty'.
