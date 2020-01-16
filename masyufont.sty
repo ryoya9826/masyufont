@@ -199,6 +199,19 @@
 	\setgothicfont[0]{YuGothM.ttc}
 }
 
+\masyuMainFontDefine{mika}{
+	\setmainfont[Ligatures=TeX]{mikachanALL001.ttf}
+	\setmainjfont[Ligatures=TeX]{mikachanALL001.ttf}
+	\setsansfont[Ligatures=TeX]{mikachanALL003.ttf}
+	\setsansjfont[Ligatures=TeX]{mikachanALL003.ttf}
+}{
+	\usepackage[mainfont]{pxmika}
+	\m@syu@packageloaded{pxmika}
+	\def\headfont{\amikafamily}
+	\def\normalfont{\amikafamily}
+	\AtBeginDocument{\renewcommand{\rmdefault}{amikafamily}\normalfont}
+}
+
 %%
 %% End of file `masyufont.sty'.
 %%
