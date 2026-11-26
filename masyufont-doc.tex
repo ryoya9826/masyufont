@@ -1,0 +1,222 @@
+\documentclass[lualatex,ja=standard,a4paper,11pt]{bxjsarticle}
+\usepackage{masyufont} % \masyufont を使わないので，既定のプリセット（newtx）で組む
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{listings}
+
+\lstset{
+  basicstyle={\ttfamily\small},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xleftmargin=3\zw,
+  numberstyle={\scriptsize},
+  numbersep=1\zw,
+}
+
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+% 制御綴と引数の表示
+\newcommand\cs[1]{\texttt{\textbackslash #1}}
+\newcommand\marg[1]{\texttt{\{}〈#1〉\texttt{\}}}
+\newcommand\oarg[1]{\texttt{[}〈#1〉\texttt{]}}
+
+\title{\texttt{masyufont} パッケージ}
+\author{安藤 遼哉（Ryoya Ando）\\\url{https://ryoya9826.github.io/}}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\noindent
+\texttt{masyufont.sty} は，本文フォントと数式フォントをプリセットの名前で選ぶためのパッケージです．
+1つのプリセットに Lua\LaTeX 用と (u)p\LaTeX 用の設定をまとめて持つので，
+同じソースをどちらのエンジンで組版しても，同じフォントの組み合わせになります．
+\end{abstract}
+
+\tableofcontents
+
+\section{主な特徴}
+
+\begin{itemize}
+\item \textbf{プリセットの名前で選ぶ:}
+  \verb|\masyufont{IPA}| のように名前を書くだけで，和文・欧文のフォントをまとめて切り替えます．
+\item \textbf{エンジンの違いを吸収:}
+  Lua\LaTeX では \texttt{luatexja-fontspec} の命令，(u)p\LaTeX では \texttt{pxchfon} の命令でフォントを設定します．
+  文書の側でエンジンごとに分岐を書く必要はありません．
+\item \textbf{プリセットの追加:}
+  \verb|\masyuMainFontDefine| と \verb|\masyuMathFontDefine| で，自分のプリセットを登録できます．
+\item \textbf{既定の設定:}
+  \verb|\masyufont| を使わなければ，本文・数式とも newtx（Times 系）になります．
+\end{itemize}
+
+\section{ライセンス}
+
+MIT License の下で配布・改変が可能です．
+詳細は同梱の \texttt{LICENSE} を参照してください．
+
+\section{使い方}
+
+\subsection{動作環境}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{lL}
+\toprule
+項目 & 条件 \\
+\midrule
+エンジン & Lua\LaTeX，p\LaTeX，up\LaTeX．pdf\LaTeX と Xe\LaTeX ではエラーになります \\
+文書クラス & \texttt{bxjsarticle} などの BXJS 文書クラス（\texttt{ja=standard}）を想定しています \\
+DVI ウェア & (u)p\LaTeX では dvipdfmx を想定しています \\
+依存パッケージ & \texttt{iftex}，\texttt{xkeyval}，\texttt{etoolbox}．(u)p\LaTeX では \texttt{pxchfon} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Lua\LaTeX では，\verb|\setmainjfont| などの命令を使うために \texttt{luatexja-fontspec} が必要です．
+\texttt{bxjsarticle} を \texttt{lualatex,ja=standard} で使えば自動で読み込まれます．
+ほかの文書クラスでは，\verb|\usepackage{luatexja-fontspec}| を先に書いてください．
+
+\subsection{読み込みと最初の例}
+
+\texttt{masyufont.sty} を文書と同じディレクトリか，\TeX が探索するディレクトリに置き，プリアンブルで読み込みます．
+次の文書は，Lua\LaTeX でも up\LaTeX でも同じ IPA フォントで組まれます．
+
+\begin{lstlisting}
+\documentclass[autodetect-engine,dvi=dvipdfmx,ja=standard]{bxjsarticle}
+\usepackage{masyufont}
+\masyufont{IPA}
+
+\begin{document}
+本文は IPA 明朝，\textsf{見出しは IPA ゴシック}，数式は $x^2+y^2$．
+\end{document}
+\end{lstlisting}
+
+\section{コマンド}
+
+\subsection{\texttt{\textbackslash masyufont}}
+
+\begin{quote}
+\cs{masyufont}\oarg{数式フォント}\marg{本文フォント}
+\end{quote}
+
+〈本文フォント〉と〈数式フォント〉のプリセットを呼び出します．
+〈数式フォント〉を省くと \texttt{default} になります．
+プリアンブルでだけ使えます．
+2回以上使うと警告が出ます．
+
+\verb|\masyufont| を1度も使わなかったときは，プリアンブルの終わりで \verb|\masyufont[default]{default}| を実行します．
+
+\subsection{\texttt{\textbackslash masyuMainFontDefine}，\texttt{\textbackslash masyuMathFontDefine}}
+
+\begin{quote}
+\cs{masyuMainFontDefine}\marg{名前}\marg{Lua\LaTeX での設定}\marg{(u)p\LaTeX での設定}\\
+\cs{masyuMathFontDefine}\marg{名前}\marg{Lua\LaTeX での設定}\marg{(u)p\LaTeX での設定}
+\end{quote}
+
+本文フォント，数式フォントのプリセットを登録します．
+\verb|\masyufont| で呼び出したときに，エンジンに応じてどちらか一方の設定が実行されます．
+プリアンブルでだけ使えます．
+組み込みのプリセットと同じ名前で登録すると，組み込みの設定を置き換えます．
+
+\begin{lstlisting}
+\masyuMainFontDefine{harano}{%
+  \setmainjfont{HaranoAjiMincho-Regular.otf}%
+  \setsansjfont{HaranoAjiGothic-Medium.otf}%
+}{%
+  \setminchofont{HaranoAjiMincho-Regular.otf}%
+  \setgothicfont{HaranoAjiGothic-Medium.otf}%
+}
+\masyufont{harano}
+\end{lstlisting}
+
+\subsection{パッケージオプション \texttt{alphabet}}
+
+(u)p\LaTeX で，\texttt{pxchfon} を \texttt{alphabet} オプションつきで読み込みます．
+和文フォントの英数字を欧文にも使う設定です．
+指定しなければ \texttt{noalphabet} で読み込みます．
+Lua\LaTeX では効果がなく，警告が出ます．
+
+\section{プリセット一覧}
+
+組み込みのプリセットは次のとおりです．
+フォントのファイルが手元にないプリセットを選ぶと，フォントが見つからないエラーになります．
+IPA フォントと XITS Math は \TeX\ Live に含まれます．
+そのほかのフォントは別に入手してください．
+
+\subsection{本文フォント}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{lL}
+\toprule
+名前 & 内容 \\
+\midrule
+\texttt{default} & \texttt{newtxtext} を読み込みます．\cs{masyufont} を使わないときの既定値です \\
+\texttt{timesnew} & \texttt{default} と同じです \\
+\texttt{IPA} & 明朝・欧文ローマン体に IPA 明朝，ゴシック・欧文サンセリフ体に IPA ゴシック \\
+\texttt{Kyokasyo} & UD デジタル教科書体（\texttt{UDDigiKyokashoN-R/B}） \\
+\texttt{BIZUD} & BIZ UD 明朝と BIZ UD ゴシック．p\LaTeX では組版が崩れることがあるので，Lua\LaTeX を勧めます \\
+\texttt{BIZUDo} & \texttt{BIZUD} と同じフォントを，(u)p\LaTeX では \texttt{.ttc} から読み込みます \\
+\texttt{oradano} & Oradano 明朝（\texttt{OradanoGSRR.ttf}）を明朝・ゴシックの両方に使います \\
+\texttt{yumin} & 游明朝（\texttt{yumin.ttf}）．(u)p\LaTeX ではゴシックに游ゴシックを使います \\
+\texttt{mika} & みかちゃんフォント．(u)p\LaTeX では \texttt{pxmika} を読み込み，\cs{normalfont} を書き換えます \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{数式フォント}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{lL}
+\toprule
+名前 & 内容 \\
+\midrule
+\texttt{default} & \texttt{newtxmath} を読み込みます \\
+\texttt{timesnew} & \texttt{default} と同じです \\
+\texttt{xits} & Lua\LaTeX で \texttt{unicode-math} を読み込み，XITS Math を使います（ISO 方式の字形）．(u)p\LaTeX では警告を出して \texttt{newtxmath} を使います \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{エラーと警告}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{lL}
+\toprule
+メッセージ & 原因 \\
+\midrule
+\texttt{This package works only with ...} & pdf\LaTeX か Xe\LaTeX で読み込んだ．パッケージは何も定義せずに終わります \\
+\texttt{Undefined key ...}（xkeyval） & 登録されていない名前のプリセットを指定した \\
+\texttt{\textbackslash masyufont is used more than once} & \cs{masyufont} を2回以上使った（警告） \\
+\texttt{Math font `xits' is available only ...} & (u)p\LaTeX で \texttt{xits} を指定した（警告） \\
+\texttt{Option `alphabet' is available only ...} & Lua\LaTeX で \texttt{alphabet} を指定した（警告） \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{制約と注意}
+
+\begin{itemize}
+\item フォントのファイル名は，作者の環境に合わせたものです．
+  手元のファイル名が異なるときは，\verb|\masyuMainFontDefine| で同じ名前のプリセットを登録し直してください．
+\item \texttt{default}，\texttt{timesnew}，\texttt{xits} のプリセットはパッケージを読み込むので，\verb|\masyufont| はプリアンブルの中で，ほかのフォント関連のパッケージより前に書くと安全です．
+\item \texttt{mika} は (u)p\LaTeX で \verb|\normalfont| と \verb|\headfont| を書き換えます．文書クラスの見出しの書体設定と干渉することがあります．
+\end{itemize}
+
+\section{更新履歴}
+
+\begin{description}
+\item[Version 0.2 (2026-11-26)]
+  読み込み時に未定義の \verb|\@xp| でエラーになり，どのエンジンでも使えなかった問題を修正．
+  \verb|\masyuMathFontDefine| が数式フォントでなく本文フォントのプリセットを登録していた問題を修正．
+  \texttt{mika} プリセットの (u)p\LaTeX 側で未定義の命令を呼んでいた問題を修正．
+  内部の \verb|\addoption|，\verb|\optiondef| を廃止し，名前の衝突を防いだ．
+  ライセンスを MIT License にした．
+  ドキュメント（\texttt{masyufont-doc.pdf}）を追加．
+\item[Version 0.1 (2019-12-12)] 初版．
+\end{description}
+
+\end{document}
