@@ -1,0 +1,14 @@
+*.aux
+*.log
+*.out
+*.toc
+*.dvi
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.listing
+out/
+.DS_Store
+
+# 試験は手元でだけ使い，リポジトリでは管理しない
+test/
